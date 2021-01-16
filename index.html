@@ -30,16 +30,23 @@
                                 <button type="submit" class="btn btn-primary mb-2" id="search-btn"><i class="fas fa-search"></i></button>
                             </div>
                         </div>
-                        
                     </form>
                 </div>
+                <!-- recent searchs -->
+                <div id="past-searches"></div>
                 <!-- right column -->
                 <div class="col-8">
                     <!-- top row right -->
                     <div class="row">
                         <div class="border border-light m-2">
-                            <h3 id="city-name">City name and date</h3>
+                            <h3 id="city-name"></h3>
                         </div>
+                    </div>
+                    <div>
+                        <h5 class="font-weight-light" id="current-temperature"></h5>
+                        <h5 class="font-weight-light" id="current-humidity"></h5>
+                        <h5 class="font-weight-light" id="current-wind-speed"></h5>
+                        <h5 class="font-weight-light" id="current-uv-index"></h5>
                     </div>
                     <!-- bottom row right -->
                     <div class="row">
@@ -52,6 +59,8 @@
         </div>
     </main>
     <!-- script tags -->
+    <!-- moment -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="assets/JS/script.js"></script>
 </body>
 </html>
