@@ -8,6 +8,7 @@ var currentUV = document.querySelector("#current-uv-index");
 // var uvClass = document.querySelector
 var cityNameTitle = document.querySelector("#city-name");
 var color = document.querySelector("#color");
+var pastCityList = document.querySelector("#past-city-list");
 
 // day1
 var day0 = document.querySelector("#day0");
@@ -35,11 +36,18 @@ var emoji2 = document.querySelector("#emoji2");
 var emoji3 = document.querySelector("#emoji3");
 var emoji4 = document.querySelector("#emoji4");
 var emoji5 = document.querySelector("#emoji5");
+
+var searchArray = JSON.parse(localStorage.getItem('searchHistory')) || [];
 // var cityName = document.querySelector("#city-search").value;
 
 // MY API KEY= 0420478afd4088e10f4d86ff30133f32
 
-// questions: LOCAL STORAGE, make background colors fill whole page
+// questions: LOCAL STORAGE, make background colors fill whole page, local storage?
+
+// search for city from local storage
+var pastCitySearch = function() {
+    getCurrentWeather()
+}
 
 // display the current weather
 var getCurrentWeather = function(event) {
@@ -51,6 +59,8 @@ var getCurrentWeather = function(event) {
         return;
     }
     getFiveDayForecast();
+    saveSearchHistory();
+    getSearchHistory();
     // api key??
     
     var apiURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&appid=0420478afd4088e10f4d86ff30133f32&units=imperial"
@@ -70,7 +80,6 @@ var getCurrentWeather = function(event) {
             var icon = document.createElement("img");
             icon.setAttribute('src', "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
             document.getElementById("city-name").appendChild(icon);
-            console.log(data.weather[0].icon);
             // fetch for uv index
             var apiURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=0420478afd4088e10f4d86ff30133f32"
             fetch(apiURL)
@@ -100,6 +109,13 @@ var getCurrentWeather = function(event) {
 // display the 5-day forecast
 var getFiveDayForecast = function() {
     event.preventDefault();
+    // clear emojis
+    emoji1.textContent = "";
+    emoji2.textContent = "";
+    emoji3.textContent = "";
+    emoji4.textContent = "";
+    emoji5.textContent = "";
+
     var cityName = document.querySelector("#city-search").value;
     var apiURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + cityName + "&appid=0420478afd4088e10f4d86ff30133f32&units=imperial"
 
@@ -115,10 +131,21 @@ var getFiveDayForecast = function() {
             temp29.textContent = "Temp: " + data.list[29].main.temp + "°F";
             temp37.textContent = "Temp: " + data.list[37].main.temp + "°F";
             // emojis
-            console.log(data);
             var icon = document.createElement("img");
-            icon.setAttribute('src', "https://openweathermap.org/img/w/" + data.list[5].weather.main + ".png");
+            icon.setAttribute('src', "https://openweathermap.org/img/w/" + data.list[5].weather[0].icon + ".png");
             emoji1.appendChild(icon);
+            var icon = document.createElement("img");
+            icon.setAttribute('src', "https://openweathermap.org/img/w/" + data.list[13].weather[0].icon + ".png");
+            emoji2.appendChild(icon);
+            var icon = document.createElement("img");
+            icon.setAttribute('src', "https://openweathermap.org/img/w/" + data.list[21].weather[0].icon + ".png");
+            emoji3.appendChild(icon);
+            var icon = document.createElement("img");
+            icon.setAttribute('src', "https://openweathermap.org/img/w/" + data.list[29].weather[0].icon + ".png");
+            emoji4.appendChild(icon);
+            var icon = document.createElement("img");
+            icon.setAttribute('src', "https://openweathermap.org/img/w/" + data.list[37].weather[0].icon + ".png");
+            emoji5.appendChild(icon);
             // humidity
             hum5.textContent = "Humidity: " + data.list[5].main.humidity + "%";
             hum13.textContent = "Humidity: " + data.list[13].main.humidity + "%";
@@ -137,19 +164,22 @@ var getFiveDayForecast = function() {
 
 // make buttons of past search results// pull from local storage 
 var getSearchHistory = function() {
-    var searchArray = localStorage.getItem('searchHistory');
-    var searchHistoryDiv = document.createElement("div");
+    pastCityList.textContent = "";
     for (var i = 0; i < searchArray.length; i++) {
-        var searchHistoryContent = searchHistoryDiv.textContent(searchHistory[i]);
-        pastSearches.appendChild(searchHistoryContent);
+        var pastSearchCity = document.createElement("li");
+        pastSearchCity.classList.add("border", "border-light");
+        pastSearchCity.textContent = searchArray[i];
+        pastSearches.appendChild(pastSearchCity);
     };
 };
 
 // save search results to local storage
 var saveSearchHistory = function () {
-    // need to make an array and add each city name to array
-    localStorage.setItem('searchHistory', cityName)
+    var cityName = document.querySelector("#city-search").value;
+    searchArray.push(cityName);
+    localStorage.setItem('searchHistory', JSON.stringify(searchArray));
 }
 
 searchBtn.addEventListener("click", getCurrentWeather);
+// pastCityList.addEventListener("click", pastCitySearch);
 getSearchHistory();
