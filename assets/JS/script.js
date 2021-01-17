@@ -1,10 +1,10 @@
 
 var searchBtn = document.querySelector("#search-btn");
-var pastSearches = document.querySelector("#past-searches");
 var currentTemp = document.querySelector("#current-temperature");
 var currentHumid = document.querySelector("#current-humidity");
 var currentWind = document.querySelector("#current-wind-speed");
 var currentUV = document.querySelector("#current-uv-index");
+var currentUvindex = document.querySelector("#current-uvindex");
 // var uvClass = document.querySelector
 var cityNameTitle = document.querySelector("#city-name");
 var color = document.querySelector("#color");
@@ -42,12 +42,12 @@ var searchArray = JSON.parse(localStorage.getItem('searchHistory')) || [];
 
 // MY API KEY= 0420478afd4088e10f4d86ff30133f32
 
-// questions: LOCAL STORAGE, make background colors fill whole page, local storage?
+// questions: LOCAL STORAGE, make background colors fill whole page, uv index color?
 
 // search for city from local storage
 var pastCitySearch = function() {
     getCurrentWeather()
-}
+};
 
 // display the current weather
 var getCurrentWeather = function(event) {
@@ -87,20 +87,20 @@ var getCurrentWeather = function(event) {
                     return response.json();
                 })
                 .then(function(data){
-                    currentUV.textContent = "UV Index: " + data.value;
+                    currentUvindex.textContent = data.value;
                     // adding color for uv index ?????
                     if (data.value < 2) {
-                        currentUV.classList.remove("bg-warning", "bg-danger", "bg-dark", "text-light");
-                        currentUV.classList.add("bg-success");
+                        currentUvindex.classList.remove("bg-warning", "bg-danger", "bg-dark", "text-light");
+                        currentUvindex.classList.add("bg-success");
                     } else if (data.value < 5) {
-                        currentUV.classList.remove("bg-success", "bg-danger", "bg-dark", "text-light");
-                        currentUV.classList.add("bg-warning");
+                        currentUvindex.classList.remove("bg-success", "bg-danger", "bg-dark", "text-light");
+                        currentUvindex.classList.add("bg-warning");
                     } else if (data.value < 10) {
-                        currentUV.classList.remove("bg-success", "bg-warning", "bg-dark", "text-light");
-                        currentUV.classList.add("bg-danger");
+                        currentUvindex.classList.remove("bg-success", "bg-warning", "bg-dark", "text-light");
+                        currentUvindex.classList.add("bg-danger");
                     } else {
-                        currentUV.classList.remove("bg-success", "bg-warning", "bg-danger");
-                        currentUV.classList.add("bg-dark text-light");
+                        currentUvindex.classList.remove("bg-success", "bg-warning", "bg-danger");
+                        currentUvindex.classList.add("bg-dark text-light");
                     }
                 });
         });
@@ -131,6 +131,7 @@ var getFiveDayForecast = function() {
             temp29.textContent = "Temp: " + data.list[29].main.temp + "°F";
             temp37.textContent = "Temp: " + data.list[37].main.temp + "°F";
             // emojis
+            console.log(data.list[5].weather[0]);
             var icon = document.createElement("img");
             icon.setAttribute('src', "https://openweathermap.org/img/w/" + data.list[5].weather[0].icon + ".png");
             emoji1.appendChild(icon);
@@ -159,7 +160,7 @@ var getFiveDayForecast = function() {
             day3.textContent = moment().add(4, 'days').format("l");
             day4.textContent = moment().add(5, 'days').format("l");
         })
-}
+};
 // loop for 5 day forecast, clear div first
 
 // make buttons of past search results// pull from local storage 
@@ -167,18 +168,27 @@ var getSearchHistory = function() {
     pastCityList.textContent = "";
     for (var i = 0; i < searchArray.length; i++) {
         var pastSearchCity = document.createElement("li");
-        pastSearchCity.classList.add("border", "border-light");
+        pastSearchCity.classList.add("btn", "btn-outline-secondary", "btn-block", "pl-0");
+        let j = i;
+        pastSearchCity.addEventListener("click", function(event) {
+            document.querySelector("#city-search").value = searchArray[j];
+            console.log(searchArray, j);
+            getCurrentWeather(event);
+        });
         pastSearchCity.textContent = searchArray[i];
-        pastSearches.appendChild(pastSearchCity);
+        pastCityList.appendChild(pastSearchCity);
     };
 };
 
 // save search results to local storage
 var saveSearchHistory = function () {
     var cityName = document.querySelector("#city-search").value;
+    if (searchArray.includes(cityName)) {
+        return;
+    }
     searchArray.push(cityName);
     localStorage.setItem('searchHistory', JSON.stringify(searchArray));
-}
+};
 
 searchBtn.addEventListener("click", getCurrentWeather);
 // pastCityList.addEventListener("click", pastCitySearch);
