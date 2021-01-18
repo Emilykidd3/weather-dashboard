@@ -81,7 +81,7 @@ var getCurrentWeather = function(event) {
             icon.setAttribute('src', "https://openweathermap.org/img/w/" + data.weather[0].icon + ".png");
             document.getElementById("city-name").appendChild(icon);
             // fetch for uv index
-            var apiURL = "http://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=0420478afd4088e10f4d86ff30133f32"
+            var apiURL = "https://api.openweathermap.org/data/2.5/uvi?lat=" + lat + "&lon=" + lon + "&appid=0420478afd4088e10f4d86ff30133f32"
             fetch(apiURL)
                 .then(function(response){
                     return response.json();
@@ -131,7 +131,6 @@ var getFiveDayForecast = function() {
             temp29.textContent = "Temp: " + data.list[29].main.temp + "°F";
             temp37.textContent = "Temp: " + data.list[37].main.temp + "°F";
             // emojis
-            console.log(data.list[5].weather[0]);
             var icon = document.createElement("img");
             icon.setAttribute('src', "https://openweathermap.org/img/w/" + data.list[5].weather[0].icon + ".png");
             emoji1.appendChild(icon);
@@ -172,7 +171,6 @@ var getSearchHistory = function() {
         let j = i;
         pastSearchCity.addEventListener("click", function(event) {
             document.querySelector("#city-search").value = searchArray[j];
-            console.log(searchArray, j);
             getCurrentWeather(event);
         });
         pastSearchCity.textContent = searchArray[i];
