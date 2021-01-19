@@ -189,5 +189,4 @@ var saveSearchHistory = function () {
 };
 
 searchBtn.addEventListener("click", getCurrentWeather);
-// pastCityList.addEventListener("click", pastCitySearch);
 getSearchHistory();
